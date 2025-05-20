@@ -3,8 +3,8 @@ info:
   title: PING FEDERATE API TOKEN
   description: |
     API for Ping Federate Token Generation
-    Generates an authentication token with a lifespan of 60 minutes.
-    If the token expires, a new token must be requested to continue accessing protected resources.
+    - Generates an authentication token with a lifespan of 60 minutes.
+    - If the token expires, a new token must be requested to continue accessing protected resources.
   version: 1.0.0
 servers:
   - url: https://idfed-preprod.mpsa.com/
