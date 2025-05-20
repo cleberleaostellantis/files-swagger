@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: PING FEDERATE API TOKEN
   description: |
@@ -52,5 +52,16 @@ paths:
                     type: string
                   expires_in:
                     type: integer
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  error_description:
+                    type: string
     # Generates an authentication token with a lifespan of 60 minutes.
     # If the token expires, a new token must be requested to continue accessing protected resources.
