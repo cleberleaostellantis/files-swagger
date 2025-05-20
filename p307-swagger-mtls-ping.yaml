@@ -1,0 +1,894 @@
+openapi: 3.0.3
+info:
+  title: P307 API GW Latam Digital Connected Services
+  description: API with MTLS for handling private events data and information updates.
+  version: 1.0.0
+servers:
+  - url: https://gw-mtls.digital-nonprod.fcalatam.com.br/connected-services
+    description: Preprod server
+  - url: https://gw-mtls.digital.fcalatam.com.br/connected-services
+    description: Production server
+
+tags:
+  - name: eCall Supplier Data
+    description: LPM Submit eCall Event Data
+  - name: Vehicle Profile Info
+    description: LPM Submit Vehicle Profile Event Data
+  - name: Vehicle xF
+    description: Endpoints for Vehicle xF operations
+paths:
+  /v1/events/svt/svt-streams/{vin}:
+    post:
+      tags:
+        - Vehicle xF
+      description: Submit Stolen Vehicle Data event.
+      parameters:
+        - name: vin
+          in: path
+          description: Vehicle Identification Number
+          required: true
+          schema:
+            type: string
+            example: 9BD376AH7RY99994
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+                  example: StolenVehicleData
+                version:
+                  type: string
+                  example: "1.0"
+                timestamp:
+                  type: integer
+                  format: int64
+                  example: 1537249973610
+                data:
+                  type: object
+                  properties:
+                    odometer:
+                      type: integer
+                      example: 0
+                    longitude:
+                      type: number
+                      example: 77.6982424
+                    latitude:
+                      type: number
+                      example: 12.952446
+                    engineStatus:
+                      type: string
+                      example: STARTED
+                    msisdn:
+                      type: string
+                      example: "123456789"
+                    customExtension:
+                      type: object
+                      properties:
+                        vehicleInfo:
+                          type: object
+                          properties:
+                            odometer:
+                              type: integer
+                              example: 0
+                            vin:
+                              type: string
+                              example: 9BD376AH7RY99994
+                            brand:
+                              type: string
+                              example: ""
+                            vehicleLocation:
+                              type: object
+                              properties:
+                                positionDirection:
+                                  type: integer
+                                  example: 0
+                                positionLongitude:
+                                  type: number
+                                  example: -43.9572
+                                positionLatitude:
+                                  type: number
+                                  example: -19.9029
+                                positionAltitude:
+                                  type: integer
+                                  example: 0
+                                isGPSFixNotAvailable:
+                                  type: boolean
+                                  example: false
+                                estimatedAltitudeError:
+                                  type: integer
+                                  example: 0
+                                gpsFixTypeEnum:
+                                  type: string
+                                  example: ID_FIX_NO_POS
+                                estimatedPositionError:
+                                  type: integer
+                                  example: 75
+                            engineStatusEnum:
+                              type: string
+                              example: STOP
+                            language:
+                              type: string
+                              example: ""
+                            vehicleSpeed:
+                              type: integer
+                              example: 0
+                            vehicleType:
+                              type: string
+                              example: PASSENGER_CLASSM1
+                            year:
+                              type: string
+                              example: ""
+                            country:
+                              type: string
+                              example: ""
+                            model:
+                              type: string
+                              example: ""
+                        isStolenModeActive:
+                          type: boolean
+                          example: false
+      responses:
+        '200':
+          description: Stolen vehicle data event submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/events/svt/svt-request-status/{vin}:
+    post:
+      tags:
+        - Vehicle xF
+      description: Submit Stolen Vehicle Mode Response event.
+      parameters:
+        - name: vin
+          in: path
+          required: true
+          description: Vehicle Identification Number
+          schema:
+            type: string
+            example: 9BD376AH7RY99994
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+                  example: StolenVehicleModeResponse
+                version:
+                  type: string
+                  example: "1.0"
+                timestamp:
+                  type: integer
+                  format: int64
+                  example: 1537120750688
+                data:
+                  type: object
+                  properties:
+                    active:
+                      type: boolean
+                      example: true
+                    customExtension:
+                      type: object
+                      properties:
+                        isStolenModeActive:
+                          type: boolean
+                          example: true
+      responses:
+        '200':
+          description: Stolen vehicle mode response submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/subscriptions/orders:
+    post:
+      tags:
+        - Vehicle xF
+      description: Create a new subscription order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Subscription order created.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/svt/remote-actions:
+    post:
+      tags:
+        - Vehicle xF
+      description: Perform remote actions on SVT.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vin:
+                  type: string
+                  example: FCAHBTTG7N9999555
+                active:
+                  type: boolean
+                  example: true
+                partnerId:
+                  type: string
+                  example: parceiro
+      responses:
+        '200':
+          description: Remote action performed.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/vehicles/get-historical-data:
+    post:
+      tags:
+        - Vehicle xF
+      description: Get historical vehicle data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Historical data retrieved.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/events/ri/ri-request-status/{user}/{vin}:
+    post:
+      tags:
+        - Vehicle xF
+      description: Submit RI request status event.
+      parameters:
+        - name: user
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: RI request status submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/events/ri/ri-notification/{user}/{vin}:
+    post:
+      tags:
+        - Vehicle xF
+      description: Submit RI notification event.
+      parameters:
+        - name: user
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: RI notification submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/events/ftd/ftd-enrollment-status/{vin}:
+    post:
+      tags:
+        - Vehicle xF
+      description: Submit FTD enrollment status event.
+      parameters:
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: FTD enrollment status submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/events/ubi/ubi-enrollment-status/{vin}:
+    post:
+      tags:
+        - Vehicle xF
+      description: Submit UBI enrollment status event.
+      parameters:
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: UBI enrollment status submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+
+  /v1/subscriptions/{id}:
+    get:
+      tags:
+        - Vehicle xF
+      description: Retrieve subscription by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subscription retrieved.
+        '400':
+          description: Invalid ID.
+        '500':
+          description: Internal server error.
+
+  /v1/svt/svt-status/{vin}:
+    get:
+      tags:
+        - Vehicle xF
+      description: Retrieve SVT status by VIN.
+      parameters:
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SVT status retrieved.
+        '400':
+          description: Invalid VIN.
+        '500':
+          description: Internal server error.
+
+  /v1/events/ecall/lpm-ecall-streams:
+    post:
+      tags:
+        - eCall Supplier Data
+      description: Endpoint to submit eCall event data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                positionCanBeTrusted:
+                  type: boolean
+                  example: true
+                vehicleType:
+                  type: string
+                  example: Passenger-M1
+                VIN:
+                  type: string
+                  example: LA35F34DAHIEKS543
+                ICCID:
+                  type: string
+                  example: 89550556764321768976
+                MSISDN:
+                  type: string
+                  example: 5511945678899
+                eventTimestamp:
+                  type: integer
+                  format: int64
+                  description: Long
+                  example: 1743442525000
+                vehiclePosition:
+                  type: array
+                  items:
+                    type: number
+                  example: [-19.91909665092943, -43.938629317989545]
+                vehicleDirection:
+                  type: number
+                  example: 120.0
+                recentVehicleLocationN1:
+                  type: array
+                  items:
+                    type: number
+                  example: [-19.91909665092943, -43.938629317989545]
+                recentVehicleLocationN2:
+                  type: array
+                  items:
+                    type: number
+                  example: [-19.91909665092943, -43.938629317989545]
+                numberOfPassengers:
+                  type: integer
+                  format: int64
+                  description: Long
+                  example: 3
+                eventTriggerType:
+                  type: string
+                  example: MANUAL
+                fastenBeltStatus:
+                  type: object
+                  properties:
+                    frontLeft:
+                      type: boolean
+                      example: true
+                    frontRight:
+                      type: boolean
+                      example: true
+                    backLeft:
+                      type: boolean
+                      example: true
+                    backMiddle:
+                      type: boolean
+                      example: false
+                    backRight:
+                      type: boolean
+                      example: false
+                seatsOccupation:
+                  type: object
+                  properties:
+                    frontLeft:
+                      type: boolean
+                      example: true
+                    frontRight:
+                      type: boolean
+                      example: true
+                    backLeft:
+                      type: boolean
+                      example: true
+                    backMiddle:
+                      type: boolean
+                      example: false
+                    backRight:
+                      type: boolean
+                      example: false
+                crashDetection:
+                  type: boolean
+                  example: false
+                crashDetails:
+                  type: object
+                  properties:
+                    frontLeftDeformation:
+                      type: boolean
+                      example: true
+                    frontDeformation:
+                      type: boolean
+                      example: false
+                    frontRightDeformation:
+                      type: boolean
+                      example: false
+                    leftSideDeformation:
+                      type: boolean
+                      example: true
+                    rightSideDeformation:
+                      type: boolean
+                      example: false
+                    rearLeftDeformation:
+                      type: boolean
+                      example: false
+                    rearRightDeformation:
+                      type: boolean
+                      example: false
+                rollingIndicator:
+                  type: boolean
+                  example: true
+                pedestrianCrash:
+                  type: boolean
+                  example: true
+                eventId:
+                  type: string
+                  example: 01963560-d64e-76e5-a4e2-2688269125b5
+      responses:
+        '200':
+          description: Event data successfully submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+  /v1/ecall/lpm-ecall-status:
+    get:
+      tags:
+        - eCall Supplier Data
+      description: Retrieve eCall event data within a specified time window.
+      parameters:
+        - name: timewindow
+          in: query
+          required: true
+          description: Time window in seconds to filter events.
+          schema:
+            type: integer
+            format: int64
+            description: Long
+            example: 3600
+      responses:
+        '200':
+          description: Successfully retrieved event data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        positionCanBeTrusted:
+                          type: boolean
+                          example: true
+                        vehicleType:
+                          type: string
+                          example: Passenger-M1
+                        VIN:
+                          type: string
+                          example: LA35F34DAHIEKS543
+                        ICCID:
+                          type: string
+                          example: 89550556764321768976
+                        MSISDN:
+                          type: string
+                          example: 5511945678899
+                        eventTimestamp:
+                          type: integer
+                          format: int64
+                          description: Long
+                          example: 1743442525000
+                        vehiclePosition:
+                          type: array
+                          items:
+                            type: number
+                          example: [-19.91909665092943, -43.938629317989545]
+                        vehicleDirection:
+                          type: number
+                          example: 120.0
+                        recentVehicleLocationN1:
+                          type: array
+                          items:
+                            type: number
+                          example: [-19.91909665092943, -43.938629317989545]
+                        recentVehicleLocationN2:
+                          type: array
+                          items:
+                            type: number
+                          example: [-19.91909665092943, -43.938629317989545]
+                        numberOfPassengers:
+                          type: integer
+                          format: int64
+                          description: Long
+                          example: 3
+                        eventTriggerType:
+                          type: string
+                          example: AUTOMATIC
+                        fastenBeltStatus:
+                          type: object
+                          properties:
+                            frontLeft:
+                              type: boolean
+                              example: true
+                            frontRight:
+                              type: boolean
+                              example: true
+                            backLeft:
+                              type: boolean
+                              example: true
+                            backMiddle:
+                              type: boolean
+                              example: false
+                            backRight:
+                              type: boolean
+                              example: false
+                        seatsOccupation:
+                          type: object
+                          properties:
+                            frontLeft:
+                              type: boolean
+                              example: true
+                            frontRight:
+                              type: boolean
+                              example: true
+                            backLeft:
+                              type: boolean
+                              example: true
+                            backMiddle:
+                              type: boolean
+                              example: false
+                            backRight:
+                              type: boolean
+                              example: false
+                        crashDetection:
+                          type: boolean
+                          example: true
+                        crashDetails:
+                          type: object
+                          properties:
+                            frontLeftDeformation:
+                              type: boolean
+                              example: true
+                            frontDeformation:
+                              type: boolean
+                              example: false
+                            frontRightDeformation:
+                              type: boolean
+                              example: false
+                            leftSideDeformation:
+                              type: boolean
+                              example: true
+                            rightSideDeformation:
+                              type: boolean
+                              example: false
+                            rearLeftDeformation:
+                              type: boolean
+                              example: false
+                            rearRightDeformation:
+                              type: boolean
+                              example: false
+                        rollingIndicator:
+                          type: boolean
+                          example: true
+                        pedestrianCrash:
+                          type: boolean
+                          example: true
+                        eventId:
+                          type: string
+                          example: 01963560-d64e-76e5-a4e2-2688269125b5
+        '400':
+          description: Invalid time window parameter.
+        '500':
+          description: Internal server error.
+
+  /v1/events/vehicles/lpm-vehicle-profile:
+    post:
+      tags:
+        - Vehicle Profile Info
+      description: Endpoint to submit vehicle information updates.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trigger:
+                  type: string
+                  example: ICCID/MSISDN_update
+                Data:
+                  type: object
+                  properties:
+                    VIN:
+                      type: string
+                      example: LA35F34DAHIEKS543
+                    ICCID:
+                      type: string
+                      example: 89550556764321768976
+                    MSISDN:
+                      type: string
+                      example: 5511945678899
+                    model:
+                      type: string
+                      example: "@@@@"
+                    modelDescription:
+                      type: string
+                      example: C10
+                    color:
+                      type: string
+                      example: Blue
+                    version:
+                      type: string
+                      example: "@@@"
+                    serie:
+                      type: string
+                      example: "@@@"
+                    brand:
+                      type: string
+                      example: LPM
+                    modelYear:
+                      type: string
+                      example: "2026"
+                    radioHWSerial:
+                      type: string
+                      example: A673789XRIEFKDK
+                    licensePlate:
+                      type: string
+                      example: STL4N71
+                    soldCountry:
+                      type: string
+                      example: BR
+                    manufacturedDate:
+                      type: integer
+                      format: int64
+                      description: Long
+                      example: 1743442525000
+                    soldDate:
+                      type: integer
+                      format: int64
+                      description: Long
+                      example: 1743452525000
+                    warrantyDate:
+                      type: integer
+                      format: int64
+                      description: Long
+                      example: 1743462525000
+                    deliverDate:
+                      type: integer
+                      format: int64
+                      description: Long
+                      example: 1743472525000
+                    lastUpdatetimestamp:
+                      type: integer
+                      format: int64
+                      description: Long
+                      example: 1743542525000
+                    userId:
+                      type: string
+                      example: uid438946xfd931
+      responses:
+        '200':
+          description: Vehicle information successfully submitted.
+        '400':
+          description: Invalid request data.
+        '500':
+          description: Internal server error.
+  /v1/vehicles/lpm-vehicle-profile:
+    get:
+      tags:
+        - Vehicle Profile Info
+      description: Retrieve vehicle information updates within a specified time range.
+      parameters:
+        - name: from
+          in: query
+          required: true
+          description: Start of the time range (timestamp in milliseconds).
+          schema:
+            type: integer
+            format: int64
+            description: Long
+            example: 1743442525000
+        - name: to
+          in: query
+          required: true
+          description: End of the time range (timestamp in milliseconds).
+          schema:
+            type: integer
+            format: int64
+            description: Long
+            example: 1743542525000
+      responses:
+        '200':
+          description: Successfully retrieved vehicle information updates.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        VIN:
+                          type: string
+                          example: LA35F34DAHIEKS543
+                        ICCID:
+                          type: string
+                          example: 89550556764321768976
+                        MSISDN:
+                          type: string
+                          example: 5511945678899
+                        model:
+                          type: string
+                          example: "@@@@"
+                        modelDescription:
+                          type: string
+                          example: C10
+                        color:
+                          type: string
+                          example: Blue
+                        version:
+                          type: string
+                          example: "@@@"
+                        serie:
+                          type: string
+                          example: "@@@"
+                        brand:
+                          type: string
+                          example: LPM
+                        modelYear:
+                          type: string
+                          example: "2026"
+                        radioHWSerial:
+                          type: string
+                          example: A673789XRIEFKDK
+                        licensePlate:
+                          type: string
+                          example: STL4N71
+                        soldCountry:
+                          type: string
+                          example: BR
+                        manufacturedDate:
+                          type: integer
+                          format: int64
+                          description: Long
+                          example: 1743442525000
+                        soldDate:
+                          type: integer
+                          format: int64
+                          description: Long
+                          example: 1743452525000
+                        warrantyDate:
+                          type: integer
+                          format: int64
+                          description: Long
+                          example: 1743462525000
+                        deliverDate:
+                          type: integer
+                          format: int64
+                          description: Long
+                          example: 1743472525000
+                        lastUpdatetimestamp:
+                          type: integer
+                          format: int64
+                          description: Long
+                          example: 1743542525000
+                        userId:
+                          type: string
+                          example: uid438946xfd931
+        '400':
+          description: Invalid time range parameters.
+        '500':
+          description: Internal server error.

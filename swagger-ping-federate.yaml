@@ -1,0 +1,56 @@
+openapi: 3.0.3
+info:
+  title: PING FEDERATE API TOKEN
+  description: |
+    API for Ping Federate Token Generation
+    Generates an authentication token with a lifespan of 60 minutes.
+    If the token expires, a new token must be requested to continue accessing protected resources.
+  version: 1.0.0
+servers:
+  - url: https://idfed-preprod.mpsa.com/
+    description: Preprod server
+  - url: https://idfed.mpsa.com/
+    description: Production server
+
+tags:
+  - name: Request Token
+    description: Token generation for Ping Federate
+paths:
+  /as/token.oauth2:
+    post:
+      tags:
+        - Request Token
+      description: The values generate a token for Ping Federate should be sent directly to the STLA Integration Team.
+      summary: Generate Token
+      operationId: generateToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                scope:
+                  type: string
+      responses:
+        '200':
+          description: Successful token generation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+    # Generates an authentication token with a lifespan of 60 minutes.
+    # If the token expires, a new token must be requested to continue accessing protected resources.
