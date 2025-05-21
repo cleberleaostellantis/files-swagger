@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   title: P307 API GW Latam Digital Connected Services
   description: API with MTLS for handling private events data and information updates.
